@@ -16,20 +16,25 @@ const Blog = ({ blog, blogs, setBlogs }) => {
   }
 
   const updatedBlogLikes = async () => {
-    console.log(blog)
-    const newUpdatedBlog1 = { ...blog, likes: blog.likes + 1 }
-    const newUpdatedBlog = { ...newUpdatedBlog1, user: newUpdatedBlog1.user.id }
-    const updatedBlog = await blogService.update(blog.id, newUpdatedBlog)
-    console.log(updatedBlog)
-    const newBlogs = blogs.filter(b => b.id !== blog.id)
-    const addedBlog = newBlogs.concat(updatedBlog)
-    addedBlog.sort((a,b) => {
-      if(parseInt(a.likes) < parseInt(b.likes)){
-        return 1
-      }
-      return -1
-    })
-    setBlogs(addedBlog)
+    try{
+      console.log(blog)
+      const newUpdatedBlog1 = { ...blog, likes: blog.likes + 1 }
+      const newUpdatedBlog = { ...newUpdatedBlog1, user: newUpdatedBlog1.user.id }
+      const updatedBlog = await blogService.update(blog.id, newUpdatedBlog)
+      console.log(updatedBlog)
+      const newBlogs = blogs.filter(b => b.id !== blog.id)
+      const addedBlog = newBlogs.concat(updatedBlog)
+      addedBlog.sort((a,b) => {
+        if(parseInt(a.likes) < parseInt(b.likes)){
+          return 1
+        }
+        return -1
+      })
+      setBlogs(addedBlog)
+    }
+    catch(exception){
+      console.log(exception)
+    }
   }
 
   const removeBlog = async () => {
@@ -53,7 +58,7 @@ const Blog = ({ blog, blogs, setBlogs }) => {
 
 
   return (
-    <div>
+    <div className='blog'>
       {showDetails ? <div style={blogStyle}><div>{blog.title}</div><div>{blog.url}</div><div>{blog.likes} <button onClick={updatedBlogLikes}>like</button></div><div>{blog.author}</div><button onClick={removeBlog}>remove</button></div>: <div style={blogStyle}>{blog.title} {blog.author} <button onClick={updatedBlogLikes}>like</button> </div>}
       <button onClick={() => setShowDetails(!showDetails)}>{btn}</button>
     </div>
